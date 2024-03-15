@@ -2,8 +2,8 @@ import express from 'express';
 import { connecttodb } from './src/models/db.connect';
 import userRouter from './src/routes/user';
 
-import userRouter2 from './src/routes/user2';
-import userRouter3 from './src/routes/user3';
+import userRouter2 from './src/routes/user';
+import userRouter3 from './src/routes/user';
 
 const app = express();
 //const user= require("./data.json");
