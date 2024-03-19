@@ -45,3 +45,12 @@ export const allFromClass = async (req: express.Request, res: express.Response, 
     console.log(updateddata)
     return res.send(updateddata).status(200); 
  }
+
+ export const deleteStudent = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
+    await student.destroy({ where :{studentId : req.params.id}})
+    const deleteddata= await student.findOne({where : {studentId : req.params.id }})
+    console.log(deleteddata)
+    return res.send(deleteddata).status(200); 
+ }
+ 

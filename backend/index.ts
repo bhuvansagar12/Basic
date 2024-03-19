@@ -21,7 +21,7 @@ const port = 8080;
 app.use('/user/student',userRouter)
 app.use('/user/student',userRouter2)
 app.use('/user/student',userRouter3)
-app.use('/user/student',userRouter4)
+app.use('/user',userRouter4)
 app.use('/user',userRouter5)
 app.use('/user',userRouter6)
 app.listen(port, () => {
