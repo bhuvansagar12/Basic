@@ -1,13 +1,16 @@
 import express from 'express';
-import {getAllUserTask} from '../controllers/user';
+import {allStudents} from '../controllers/user';
+import {allNames} from '../controllers/user';
+import {allFromClass} from '../controllers/user';
+import {addStudent} from '../controllers/user';
+import {updateStudent} from '../controllers/user';
 
-import { getAllUserTask2 } from '../controllers/user';
-import { getAllUserTask3 } from '../controllers/user';
 const userRouter = express.Router();
 
-userRouter.get('/all',getAllUserTask);
-
-userRouter.get('/name',getAllUserTask2);
-userRouter.get('/admission',getAllUserTask3);
+userRouter.get('/all',allStudents);
+userRouter.get('/name',allNames);
+userRouter.get('/admission',allFromClass);
+userRouter.post('/students',addStudent);
+userRouter.patch('/students/:id',updateStudent);
 
 export default userRouter;
