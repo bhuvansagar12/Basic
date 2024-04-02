@@ -1,4 +1,5 @@
-import { Table, Column, Model, PrimaryKey } from 'sequelize-typescript';
+import { Table, Column, Model, PrimaryKey, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { department } from './departments';
 
 @Table
 export class student extends Model {
@@ -6,7 +7,7 @@ export class student extends Model {
     @Column
     studentId: number;
 
-    @Column
+    @Column({ type: 'STRING', allowNull: false, validate: { len: [1, 50] } })
     name: string;
 
     @Column
@@ -17,5 +18,12 @@ export class student extends Model {
 
     @Column
     dob: Date;
+
+    @ForeignKey(() => department)
+    @Column
+    departmentId: number;
+
+    @BelongsTo(() => department)
+    department: department;
 
 }

@@ -1,5 +1,6 @@
 import express from 'express';
 import { student } from '../models/student';
+import { department } from '../models/departments';
 
 //get all the data in the table named students and orders according to DOB
 /**
@@ -16,7 +17,7 @@ export const allStudents = async (req: express.Request, res: express.Response, n
         });
         return res.send(data).status(200);
     } catch (error) {
-        return res.send("Error Occured").status(200);
+        console.log("Error Occured:", error);
     }
 }
 
@@ -35,7 +36,7 @@ export const allNames = async (req: express.Request, res: express.Response, next
         });
         return res.send(data).status(200);
     } catch (error) {
-        return res.send("Error Occured").status(200);
+        console.log(error);
     }
 }
 
@@ -54,25 +55,25 @@ export const allFromClass = async (req: express.Request, res: express.Response, 
         });
         return res.send(inf).status(200);
     } catch (error) {
-        return res.send("Error Occured").status(200);
+        console.log(error);
     }
 }
 
- //adds a new entry to the database
- /**
-  * this is a functon that adds a new student into record.
-  * @param req 
-  * @param res 
-  * @param next 
-  * @returns 
-  */
+//adds a new entry to the database
+/**
+ * this is a functon that adds a new student into record.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @returns 
+ */
 export const addStudent = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         const newStudent = req.body;
         const inf = await student.create(newStudent)
         return res.send(inf).status(200);
     } catch (error) {
-        return res.send("Error Occured").status(200);
+        console.log(error);
     }
 }
 
@@ -92,7 +93,7 @@ export const updateStudent = async (req: express.Request, res: express.Response,
         // console.log(updateddata)
         return res.send(updateddata).status(200);
     } catch (error) {
-        return res.send("Error Occured").status(200);
+        console.log(error);
     }
 }
 
@@ -111,10 +112,17 @@ export const deleteStudent = async (req: express.Request, res: express.Response,
         // console.log(deleteddata)
         return res.send(deleteddata).status(200);
     } catch (error) {
-        return res.send("Error Occured").status(200);
+        console.log(error);
     }
 }
 
+/**
+ * this is function that gives all the students by class.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @returns 
+ */
 export const allStudentsByClass = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         // Find all student records
@@ -124,7 +132,7 @@ export const allStudentsByClass = async (req: express.Request, res: express.Resp
         const studentsByClass: { [className: string]: any } = {};
 
 
-        // Group students by class
+        // Group students by classs
         students.forEach(student => {
             if (!studentsByClass[student.class]) {
                 studentsByClass[student.class] = [];
@@ -133,11 +141,67 @@ export const allStudentsByClass = async (req: express.Request, res: express.Resp
         });
 
         // Return the grouped data
-        return res.json(studentsByClass).status(200);
+        return res.send([studentsByClass]).status(200);
     } catch (error) {
         console.error("Error Occurred:", error);
         return res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
- 
+/**
+ * this function gives all the departments.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @returns 
+ */
+export const dept = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const data = await department.findAll({
+        });
+        return res.send(data).status(200);
+    } catch (error) {
+        console.log("Error Occured:", error);
+    }
+}
+
+/**
+ * this function gives the info about the student and department based on the ID given by the user.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @returns 
+ */
+export const studentdept = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const { id } = req.params;
+        const students = await student.findOne({
+            where: { studentId: id },
+            include: [{ model: department, as: 'department' }]
+        });
+
+        if (!students) {
+            return res.status(404).json({ error: "Student not found" });
+        }
+
+        const responseData = {
+            studentId: students.studentId,
+            name: students.name,
+            class: students.class,
+            section: students.section,
+            dob: students.dob,
+            departmentId: students.departmentId,
+            department: {
+                departmentId: students.department.departmentId,
+                departmentName: students.department.departmentName,
+                //departmentFlag: students.department.departmentFlag,
+                departmentHod: students.department.departmentHod
+            }
+        };
+
+return res.status(200).json([responseData]);
+    } catch (error) {
+    console.error("Error occurred:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+}
+}

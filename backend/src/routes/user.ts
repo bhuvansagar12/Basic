@@ -6,6 +6,8 @@ import {addStudent} from '../controllers/user';
 import {updateStudent} from '../controllers/user';
 import {deleteStudent} from '../controllers/user';
 import {allStudentsByClass} from '../controllers/user';
+import {dept} from '../controllers/user';
+import { studentdept } from '../controllers/user';
 
 const userRouter = express.Router();
 
@@ -16,6 +18,7 @@ userRouter.post('/students',addStudent);
 userRouter.patch('/students/:id',updateStudent);
 userRouter.delete('/students/:id',deleteStudent);
 userRouter.get('/class',allStudentsByClass);
-
+userRouter.get('/department',dept);
+userRouter.get('/department/:id',studentdept)
 
 export default userRouter;
