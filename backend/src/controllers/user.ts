@@ -33,7 +33,7 @@ export const allStudents = async (req: express.Request, res: express.Response, n
 export const allNames = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         const data = await student.findAll({
-            attributes: ["nae"]
+            attributes: ["name"]
         });
         return res.send(data).status(200);
     } catch (error) {
