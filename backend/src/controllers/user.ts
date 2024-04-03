@@ -17,7 +17,8 @@ export const allStudents = async (req: express.Request, res: express.Response, n
         });
         return res.send(data).status(200);
     } catch (error) {
-        console.log("Error Occured:", error);
+        //console.log("Error Occured:", error);
+        next(error);
     }
 }
 
@@ -32,11 +33,12 @@ export const allStudents = async (req: express.Request, res: express.Response, n
 export const allNames = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         const data = await student.findAll({
-            attributes: ["name"]
+            attributes: ["nae"]
         });
         return res.send(data).status(200);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
+        next(error);
     }
 }
 
@@ -55,7 +57,8 @@ export const allFromClass = async (req: express.Request, res: express.Response, 
         });
         return res.send(inf).status(200);
     } catch (error) {
-        console.log(error);
+        //console.log(error);
+       next(error);
     }
 }
 
@@ -73,7 +76,8 @@ export const addStudent = async (req: express.Request, res: express.Response, ne
         const inf = await student.create(newStudent)
         return res.send(inf).status(200);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+        next(error);
     }
 }
 
@@ -93,7 +97,8 @@ export const updateStudent = async (req: express.Request, res: express.Response,
         // console.log(updateddata)
         return res.send(updateddata).status(200);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+        next(error);
     }
 }
 
@@ -112,7 +117,8 @@ export const deleteStudent = async (req: express.Request, res: express.Response,
         // console.log(deleteddata)
         return res.send(deleteddata).status(200);
     } catch (error) {
-        console.log(error);
+        // console.log(error);
+        next(error);
     }
 }
 
@@ -143,8 +149,7 @@ export const allStudentsByClass = async (req: express.Request, res: express.Resp
         // Return the grouped data
         return res.send([studentsByClass]).status(200);
     } catch (error) {
-        console.error("Error Occurred:", error);
-        return res.status(500).json({ error: "Internal Server Error" });
+        next(error);
     }
 }
 
@@ -161,7 +166,8 @@ export const dept = async (req: express.Request, res: express.Response, next: ex
         });
         return res.send(data).status(200);
     } catch (error) {
-        console.log("Error Occured:", error);
+        //console.log("Error Occured:", error);
+        next(error);
     }
 }
 
@@ -201,7 +207,7 @@ export const studentdept = async (req: express.Request, res: express.Response, n
 
 return res.status(200).json([responseData]);
     } catch (error) {
-    console.error("Error occurred:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    next(error);
 }
 }
+

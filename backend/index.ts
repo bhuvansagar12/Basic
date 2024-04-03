@@ -2,6 +2,7 @@ import express from 'express';
 import { connecttodb } from './src/models/db.connect';
 import userRouter from './src/routes/user';
 import userRouter2 from './src/routes/user';
+import { errorHandler, notFoundHandler } from './src/middlewares/error-middlewares';
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -16,6 +17,9 @@ connecttodb();
 // });
 app.use('/user/student', userRouter)
 app.use('/user', userRouter2)
+
+app.use(errorHandler);
+app.use(notFoundHandler);
 
 app.listen(port, () => {
     return console.log(`Server is listening to PORT:${port}`);
