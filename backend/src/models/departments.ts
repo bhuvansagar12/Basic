@@ -9,8 +9,8 @@ export class department extends Model {
     @Column
     departmentName: string;
 
-    // @Column
-    // departmentFlag: string;
+    @Column
+    departmentFlag: string;
 
     @Column
     departmentHod: string;

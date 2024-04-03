@@ -194,7 +194,7 @@ export const studentdept = async (req: express.Request, res: express.Response, n
             department: {
                 departmentId: students.department.departmentId,
                 departmentName: students.department.departmentName,
-                //departmentFlag: students.department.departmentFlag,
+                departmentFlag: students.department.departmentFlag,
                 departmentHod: students.department.departmentHod
             }
         };
