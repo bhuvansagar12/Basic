@@ -1,5 +1,5 @@
 import express from 'express';
-// import { jwt } from 'jsonwebtoken';
+// import  jwt  from 'jsonwebtoken';
 import { connecttodb } from './src/models/db.connect';
 import userRouter from './src/routes/user';
 import userRouter2 from './src/routes/user';
