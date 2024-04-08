@@ -1,7 +1,8 @@
 import express from 'express';
+
 import { student } from '../models/student';
 import { department } from '../models/departments';
-
+import jwt from 'jsonwebtoken';
 //get all the data in the table named students and orders according to DOB
 /**
  * this is a functon that returns all the students details and order them according to DOB
@@ -210,4 +211,51 @@ return res.status(200).json([responseData]);
     next(error);
 }
 }
+
+export const jwtauth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        res.json({
+            text  : 'my api'
+        })
+        
+    } catch (error) {
+        //console.log("Error Occured:", error);
+        next(error);
+    }
+}
+
+export const jwtauthlogin = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const user ={ id : 3};
+        const token = jwt.sign({ user }, 'my_secret_key');
+        res.json({
+            token:token
+        });
+        
+    } catch (error) {
+        //console.log("Error Occured:", error);
+        next(error);
+    }
+}
+
+export const jwtauthpro = async (req: express.Request & { token?: string }, res: express.Response, next: express.NextFunction) => {
+    try {
+        if (!req.token) {
+            return res.sendStatus(403);
+        }
+
+        jwt.verify(req.token, 'my_secret_key', (err: any, data: any) => {
+            if (err) {
+                res.sendStatus(403);
+            } else {
+                res.json({
+                    text: 'this is protected',
+                    data: data
+                });
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 

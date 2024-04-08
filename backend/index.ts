@@ -1,8 +1,10 @@
 import express from 'express';
+// import { jwt } from 'jsonwebtoken';
 import { connecttodb } from './src/models/db.connect';
 import userRouter from './src/routes/user';
 import userRouter2 from './src/routes/user';
-import { errorHandler, notFoundHandler } from './src/middlewares/error-middlewares';
+import { errorHandler } from './src/middlewares/error-middlewares';
+// import { authenticateJWT } from './src/middlewares/jwtAuthMiddleware';
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -17,9 +19,12 @@ connecttodb();
 // });
 app.use('/user/student', userRouter)
 app.use('/user', userRouter2)
+app.use('/login', userRouter);
+
 
 app.use(errorHandler);
-app.use(notFoundHandler);
+//app.use(notFoundHandler);
+
 
 app.listen(port, () => {
     return console.log(`Server is listening to PORT:${port}`);
