@@ -1,10 +1,10 @@
 import express from 'express';
-// import  jwt  from 'jsonwebtoken';
 import { connecttodb } from './src/models/db.connect';
 import userRouter from './src/routes/user';
 import userRouter2 from './src/routes/user';
+import authRouter from './src/routes/signin';
 import { errorHandler } from './src/middlewares/error-middlewares';
-// import { authenticateJWT } from './src/middlewares/jwtAuthMiddleware';
+// import { logRequestDetails } from './src/controllers/user';
 
 const app = express();
 const bodyParser = require('body-parser');
@@ -19,8 +19,8 @@ connecttodb();
 // });
 app.use('/user/student', userRouter)
 app.use('/user', userRouter2)
-app.use('/login', userRouter);
-
+app.use('/login', authRouter);
+// app.use(logRequestDetails);
 
 app.use(errorHandler);
 //app.use(notFoundHandler);

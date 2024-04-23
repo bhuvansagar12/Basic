@@ -3,11 +3,14 @@ import { department } from './departments';
 
 @Table
 export class student extends Model {
+    static find(arg0: (user: any) => boolean) {
+        throw new Error('Method not implemented.');
+    }
     @PrimaryKey
     @Column
     studentId: number;
 
-    @Column({ type: 'STRING', allowNull: false, validate: { len: [1, 50] } })
+    @Column
     name: string;
 
     @Column

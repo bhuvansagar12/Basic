@@ -1,8 +1,17 @@
-import express from 'express';
+import express, { response } from 'express';
 
 import { student } from '../models/student';
 import { department } from '../models/departments';
-import jwt from 'jsonwebtoken';
+import { Logger } from '../../log/logger';
+
+const link='http://localhost:8080'
+
+// export const logRequestDetails = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//     const { method, originalUrl } = req;
+//     Logger.info(`[${method}] Request received for URL:${link}${originalUrl}`);
+//     next(); 
+// };
+
 //get all the data in the table named students and orders according to DOB
 /**
  * this is a functon that returns all the students details and order them according to DOB
@@ -14,11 +23,24 @@ import jwt from 'jsonwebtoken';
 export const allStudents = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         const data = await student.findAll({
-            order: ["dob"]
+            order: ["class"]
         });
+        
+        Logger.info({
+            data : data.map(student => student.dataValues),
+            message:'displayed students',
+            Status: 200,
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+        });
+       
         return res.send(data).status(200);
+        
     } catch (error) {
         //console.log("Error Occured:", error);
+        Logger.error({
+            error: error.message
+        });
+
         next(error);
     }
 }
@@ -36,9 +58,21 @@ export const allNames = async (req: express.Request, res: express.Response, next
         const data = await student.findAll({
             attributes: ["name"]
         });
+        
+        Logger.info({
+            data : data.map(student => student.dataValues),
+            Status: 200,
+            message:'displayed all student names',
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+
         return res.send(data).status(200);
     } catch (error) {
         //console.log(error);
+        Logger.error({
+            error: error.message
+        });
         next(error);
     }
 }
@@ -53,12 +87,23 @@ export const allNames = async (req: express.Request, res: express.Response, next
  */
 export const allFromClass = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        const inf = await student.findAll({
+        const data = await student.findAll({
             where: { class: "10" }
         });
-        return res.send(inf).status(200);
+        Logger.info({
+            data : data.map(student => student.dataValues),
+            Status: 200,
+            message:'displayed student names from speicified class',
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+        
+        return res.send(data).status(200);
     } catch (error) {
         //console.log(error);
+        Logger.error({
+            error: error.message
+        });
        next(error);
     }
 }
@@ -74,10 +119,23 @@ export const allFromClass = async (req: express.Request, res: express.Response, 
 export const addStudent = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         const newStudent = req.body;
-        const inf = await student.create(newStudent)
-        return res.send(inf).status(200);
+        const data = await student.create(newStudent)
+
+        Logger.info({
+            //data : data.map(student => student.dataValues),
+            newData: newStudent,
+            Status: 200,
+            message:'added new student details',
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+
+        return res.send(data).status(200);
     } catch (error) {
         // console.log(error);
+        Logger.error({
+            error: error.message
+        });
         next(error);
     }
 }
@@ -93,12 +151,25 @@ export const addStudent = async (req: express.Request, res: express.Response, ne
 export const updateStudent = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
         const newStudent = req.body;
+        const olddata = await student.findOne({ where: { studentId: req.params.id } })
         const newdata = await student.update(newStudent, { where: { studentId: req.params.id } })
         const updateddata = await student.findOne({ where: { studentId: req.params.id } })
-        // console.log(updateddata)
+
+        Logger.info({
+            oldData: olddata.dataValues,
+            newData: updateddata.dataValues,
+            Status: 200,
+            message: 'added new student details',
+            url: `[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+
         return res.send(updateddata).status(200);
     } catch (error) {
         // console.log(error);
+        Logger.error({
+            error: error.message
+        });
         next(error);
     }
 }
@@ -113,12 +184,27 @@ export const updateStudent = async (req: express.Request, res: express.Response,
  */
 export const deleteStudent = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     try {
-        await student.destroy({ where: { studentId: req.params.id } })
         const deleteddata = await student.findOne({ where: { studentId: req.params.id } })
+        await student.destroy({ where: { studentId: req.params.id } })
+        //const deleteddata = await student.findOne({ where: { studentId: req.params.id } })
         // console.log(deleteddata)
+
+        Logger.info({
+            //data : data.map(student => student.dataValues),
+            deletedData: deleteddata.dataValues,
+            message:'deleted existing student details',
+            Status: 200,
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+       
+
         return res.send(deleteddata).status(200);
     } catch (error) {
         // console.log(error);
+        Logger.error({
+            error: error.message
+        });
         next(error);
     }
 }
@@ -146,10 +232,20 @@ export const allStudentsByClass = async (req: express.Request, res: express.Resp
             }
             studentsByClass[student.class].push(student);
         });
+        Logger.info({
+            data : studentsByClass,
+            Status: 200,
+            message:'displayed student from the class',
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
 
         // Return the grouped data
         return res.send([studentsByClass]).status(200);
     } catch (error) {
+        Logger.error({
+            error: error.message
+        });
         next(error);
     }
 }
@@ -165,9 +261,21 @@ export const dept = async (req: express.Request, res: express.Response, next: ex
     try {
         const data = await department.findAll({
         });
+
+        Logger.info({
+            data : data.map(department => department.dataValues),
+            message:'displayed all departments',
+            Status: 200,
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+
         return res.send(data).status(200);
     } catch (error) {
         //console.log("Error Occured:", error);
+        Logger.error({
+            error: error.message
+        });
         next(error);
     }
 }
@@ -206,56 +314,19 @@ export const studentdept = async (req: express.Request, res: express.Response, n
             }
         };
 
+        Logger.info({
+            data : responseData,
+            Status: 200,
+            message:'displayed student and deartment details',
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+
 return res.status(200).json([responseData]);
     } catch (error) {
+        Logger.error({
+            error: error.message
+        });
     next(error);
 }
 }
-
-export const jwtauth = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    try {
-        res.json({
-            text  : 'my api'
-        })
-        
-    } catch (error) {
-        //console.log("Error Occured:", error);
-        next(error);
-    }
-}
-
-export const jwtauthlogin = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    try {
-        const user ={ id : 3};
-        const token = jwt.sign({ user }, 'my_secret_key');
-        res.json({
-            token:token
-        });
-        
-    } catch (error) {
-        //console.log("Error Occured:", error);
-        next(error);
-    }
-}
-
-export const jwtauthpro = async (req: express.Request & { token?: string }, res: express.Response, next: express.NextFunction) => {
-    try {
-        if (!req.token) {
-            return res.sendStatus(403);
-        }
-
-        jwt.verify(req.token, 'my_secret_key', (err: any, data: any) => {
-            if (err) {
-                res.sendStatus(403);
-            } else {
-                res.json({
-                    text: 'this is protected',
-                    data: data
-                });
-            }
-        });
-    } catch (error) {
-        next(error);
-    }
-};
-
