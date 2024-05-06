@@ -20,7 +20,7 @@ export const errorHandler = (err, req, res, next) => {
             errorMessage = "Internal Server Error";
             break;
         default:
-            errorMessage = "wrong input";
+            errorMessage = "unkown error";
     }
 
     res.status(err.status || 500).json({ error: errorMessage });
