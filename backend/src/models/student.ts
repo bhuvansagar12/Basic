@@ -3,9 +3,9 @@ import { department } from './departments';
 
 @Table
 export class student extends Model {
-    static find(arg0: (user: any) => boolean) {
-        throw new Error('Method not implemented.');
-    }
+    // static find(arg0: (user: any) => boolean) {
+    //     throw new Error('Method not implemented.');
+    // }
     @PrimaryKey
     @Column
     studentId: number;
