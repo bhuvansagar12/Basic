@@ -1,7 +1,7 @@
 // Error handling middleware function
 export const errorHandler = (err, req, res, next) => {
     console.error("Error occurred from middlewarefunction:", err);
-    
+    console.log('error status',err.status);
     let errorMessage;
     switch (err.status) {
         case 400:

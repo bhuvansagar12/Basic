@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import {student} from './student';
 import { department } from './departments';
+import { users } from './users';
 
 export const connecttodb = async() => {
     try {
@@ -10,7 +11,7 @@ export const connecttodb = async() => {
             username: 'root',
             password: 'password12',
             database: 'user',
-            models: [student,department]
+            models: [student,department,users]
         });
         await connection.sync();
     } catch (error) {

@@ -3,14 +3,9 @@ import express, { response } from 'express';
 import { student } from '../models/student';
 import { department } from '../models/departments';
 import { Logger } from '../../log/logger';
+import { users } from '../models/users';
 
 const link='http://localhost:8080'
-
-// export const logRequestDetails = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-//     const { method, originalUrl } = req;
-//     Logger.info(`[${method}] Request received for URL:${link}${originalUrl}`);
-//     next(); 
-// };
 
 //get all the data in the table named students and orders according to DOB
 /**
@@ -36,11 +31,11 @@ export const allStudents = async (req: express.Request, res: express.Response, n
         return res.send(data).status(200);
         
     } catch (error) {
-        //console.log("Error Occured:", error);
+        console.log("Error Occured:", error);
         Logger.error({
             error: error.message
         });
-
+        error.status=500;
         next(error);
     }
 }
@@ -329,4 +324,67 @@ return res.status(200).json([responseData]);
         });
     next(error);
 }
+}
+
+/**
+ * this function that returns all the users.
+ * @param req 
+ * @param res 
+ * @param next 
+ * @returns 
+ */
+export const allUsers = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const data = await users.findAll({
+        });
+        
+        Logger.info({
+            data : data.map(users => users.dataValues),
+            message:'displayed all the Users',
+            Status: 200,
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+        });
+       
+        return res.send(data).status(200);
+        
+    } catch (error) {
+        //console.log("Error Occured:", error);
+        Logger.error({
+            error: error.message
+        });
+
+        next(error);
+    }
+}
+
+export const signup = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    try {
+        const { userId, userName, password } = req.body;
+        console.log("entered",userName, req.body);
+        const existingUser = await users.findOne({ where: { userName } });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username already exists' });
+        }
+        const newUser = await users.create({userId, userName, password });
+        res.status(201).json(newUser)
+        
+
+
+        Logger.info({
+            //data : data.map(student => student.dataValues),
+            newData: newUser,
+            Status: 200,
+            message:'New user signedup',
+            url:`[${req.method}] Request received for URL: ${link}${req.originalUrl}`
+            
+        });
+
+        return res.send(newUser).status(200);
+    } catch (error) {
+        // console.log(error);
+        Logger.error({
+            error: error.message
+        });
+        next(error);
+    }
 }

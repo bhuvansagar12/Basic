@@ -8,20 +8,23 @@ import { deleteStudent } from '../controllers/user';
 import { allStudentsByClass } from '../controllers/user';
 import { dept } from '../controllers/user';
 import { studentdept } from '../controllers/user';
+import { allUsers } from '../controllers/user';
 import { verifyToken } from '../middlewares/authorization';
+import { signup } from '../controllers/user';
 
 const userRouter = express.Router();
 
-userRouter.get('/all',verifyToken, allStudents);
-userRouter.get('/name', verifyToken, allNames);
-userRouter.get('/admission',verifyToken, allFromClass);
-userRouter.post('/students',verifyToken, addStudent);
+userRouter.get('/student/all', allStudents);
+userRouter.get('/student/name', allNames);
+userRouter.get('/student/admission', allFromClass);
+userRouter.post('/student/students', addStudent);
 userRouter.patch('/students/:id', verifyToken,updateStudent);
 userRouter.delete('/students/:id', verifyToken,deleteStudent);
 userRouter.get('/class',verifyToken, allStudentsByClass);
 userRouter.get('/department', verifyToken,dept);
 userRouter.get('/department/:id',verifyToken, studentdept);
-
+userRouter.get('/users', allUsers);
+userRouter.post('/signup',signup);
 export default userRouter;
 
 
