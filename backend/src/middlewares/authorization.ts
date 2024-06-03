@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import express from 'express';
 
-
 const secretKey = 'secret-key';
 
 export const verifyToken = (req: express.Request, res: express.Response, next: express.NextFunction) => {
