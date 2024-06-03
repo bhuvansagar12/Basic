@@ -16,9 +16,9 @@ const userRouter = express.Router();
 
 userRouter.get('/student/all', allStudents);
 userRouter.get('/student/name', allNames);
-userRouter.get('/student/admission', allFromClass);
-userRouter.post('/student/students', addStudent);
-userRouter.patch('/students/:id', verifyToken,updateStudent);
+userRouter.get('/student/admission',verifyToken, allFromClass);
+userRouter.post('/student/students',verifyToken, addStudent);
+userRouter.patch('/students/:id',verifyToken, updateStudent);
 userRouter.delete('/students/:id', verifyToken,deleteStudent);
 userRouter.get('/class',verifyToken, allStudentsByClass);
 userRouter.get('/department', verifyToken,dept);
