@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, Container, Pagination, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './StudentPage.css';
 import StudentModal from './StudentModal';
@@ -17,6 +18,8 @@ const StudentPage = () => {
   const [filterClass, setFilterClass] = useState('');
   const [filterSection, setFilterSection] = useState('');
   const [sortOption, setSortOption] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchStudents();
@@ -54,13 +57,12 @@ const StudentPage = () => {
 
   const handleUpdate = async (updatedStudent) => {
     try {
-      console.log('updated in the frontend',updatedStudent);
+      console.log('updated in the frontend', updatedStudent);
       await axios.patch(`http://localhost:8080/user/students/${updatedStudent.studentId}`, updatedStudent);
       fetchStudents(); // Refresh the student list after updating
       setShowModal(false);
     } catch (error) {
       alert('Failed to update student. Please check the console for more details.');
-  
       console.error('Error updating student:', error);
     }
   };
@@ -104,9 +106,13 @@ const StudentPage = () => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleLogout = () => {
+    navigate('/login');
+  };
+
   return (
     <Container className="container">
-      <h1 className="title">All Students</h1>
+      <h1 className="title">STUDENTS</h1>
       <div className="filters">
         <Form.Group controlId="filterClass">
           <Form.Label>Filter by Class</Form.Label>
@@ -184,6 +190,11 @@ const StudentPage = () => {
         onHide={() => setShowConfirmation(false)}
         onConfirm={handleConfirmDelete}
       />
+      <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
+        <Button variant="danger" onClick={handleLogout}>
+          Log Out
+        </Button>
+      </div>
     </Container>
   );
 };

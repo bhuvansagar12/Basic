@@ -28,7 +28,7 @@ const AuthenticatedPage = () => {
         width: '100%'
       }}>
         <img src={collegeLogo} alt="College Logo" style={{ 
-          height: '100px', // Adjust the height as needed
+          height: '200px', // Adjust the height as needed
           marginLeft: '20px' 
         }} />
         <ul style={{ 
@@ -39,10 +39,10 @@ const AuthenticatedPage = () => {
           marginRight: '30px'
         }}>
           <li>
-            <Link to="/contact" style={{ color: 'black', textDecoration: 'none',fontSize: '20px',fontWeight: 'bold' }}>Contact Info</Link>
+            <Link to="/contact" style={{ color: 'white', textDecoration: 'none',fontSize: '20px',fontWeight: 'bold' }}>Contact Info</Link>
           </li>
           <li>
-            <Link to="/student/all" style={{ color: 'black', textDecoration: 'none',fontSize: '20px',fontWeight: 'bold' }}>Students</Link>
+            <Link to="/student/all" style={{ color: 'white', textDecoration: 'none',fontSize: '20px',fontWeight: 'bold' }}>Students</Link>
           </li>
         </ul>
       </nav>

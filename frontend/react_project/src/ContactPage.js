@@ -1,10 +1,33 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import mobilePhoto from './mobile_photo.jpg'; // Make sure to replace this with the actual path to your image
 
 const ContactPage = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Perform any necessary logout actions here (e.g., clearing authentication state)
+    navigate('/login'); // Redirect to login page
+  };
+
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Contact Information</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <h1>Contact Information</h1>
+        <button 
+          onClick={handleLogout}
+          style={{
+            padding: '10px 20px',
+            borderRadius: '4px',
+            border: 'none',
+            backgroundColor: '#d9534f',
+            color: 'white',
+            cursor: 'pointer',
+          }}
+        >
+          Log Out
+        </button>
+      </div>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 300px', padding: '10px' }}>
           <h2>Ramaiah Institute Of Technology</h2>
