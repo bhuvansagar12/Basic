@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, Container, Pagination, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './StudentPage.css';
 import StudentModal from './StudentModal';
@@ -10,7 +12,7 @@ import ConfirmationDialog from './ConfirmationDialog';
 const StudentPage = () => {
   const [students, setStudents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [studentsPerPage] = useState(9);
+  const [studentsPerPage] = useState(11);
   const [showModal, setShowModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -18,6 +20,7 @@ const StudentPage = () => {
   const [filterClass, setFilterClass] = useState('');
   const [filterSection, setFilterSection] = useState('');
   const [sortOption, setSortOption] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const navigate = useNavigate();
 
@@ -82,10 +85,16 @@ const StudentPage = () => {
     setCurrentPage(1); // Reset to first page on sort change
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on search change
+  };
+
   const filteredStudents = students.filter(student => {
     return (
       (filterClass === '' || student.class === filterClass) &&
-      (filterSection === '' || student.section === filterSection)
+      (filterSection === '' || student.section === filterSection) &&
+      (searchQuery === '' || student.name.toLowerCase().includes(searchQuery.toLowerCase()))
     );
   });
 
@@ -112,38 +121,46 @@ const StudentPage = () => {
 
   return (
     <Container className="container">
-      <h1 className="title">STUDENTS</h1>
-      <div className="filters">
-        <Form.Group controlId="filterClass">
-          <Form.Label>Filter by Class</Form.Label>
-          <Form.Control as="select" value={filterClass} onChange={handleFilterClassChange}>
-            <option value="">All Classes</option>
-            <option value="10">Class 10</option>
-            <option value="11">Class 11</option>
-            <option value="12">Class 12</option>
-            <option value="13">Class 13</option>
-            <option value="14">Class 14</option>
-            <option value="15">Class 15</option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="filterSection">
-          <Form.Label>Filter by Section</Form.Label>
-          <Form.Control as="select" value={filterSection} onChange={handleFilterSectionChange}>
-            <option value="">All Sections</option>
-            <option value="A">Section A</option>
-            <option value="B">Section B</option>
-            <option value="C">Section C</option>
-            <option value="D">Section D</option>
-          </Form.Control>
-        </Form.Group>
-        <Form.Group controlId="sortOption">
-          <Form.Label>Sort By</Form.Label>
-          <Form.Control as="select" value={sortOption} onChange={handleSortChange}>
-            <option value="">None</option>
-            <option value="name">Name</option>
-            <option value="class">Class</option>
-          </Form.Control>
-        </Form.Group>
+      <div className="top-right-container">
+        <div className="filters">
+          <Form.Group controlId="filterClass">
+            <Form.Label>Filter by Class</Form.Label>
+            <Form.Control as="select" value={filterClass} onChange={handleFilterClassChange}>
+              <option value="">Classes</option>
+              <option value="10">Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+              <option value="13">Class 13</option>
+              <option value="14">Class 14</option>
+              <option value="15">Class 15</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="filterSection">
+            <Form.Label>Filter by Section</Form.Label>
+            <Form.Control as="select" value={filterSection} onChange={handleFilterSectionChange}>
+              <option value="">Sections</option>
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="C">Section C</option>
+              <option value="D">Section D</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="sortOption">
+            <Form.Label>Sort By</Form.Label>
+            <Form.Control as="select" value={sortOption} onChange={handleSortChange}>
+              <option value="">None</option>
+              <option value="name">Name</option>
+              <option value="class">Class</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group controlId="searchQuery">
+            <Form.Label>Search</Form.Label>
+            <Form.Control type="text" placeholder="Search by name" value={searchQuery} onChange={handleSearchChange} />
+          </Form.Group>
+        </div>
+        <Button variant="white" onClick={handleLogout} className="logout-button">
+          <FontAwesomeIcon icon={faSignOutAlt} /> 
+        </Button>
       </div>
       <Table striped bordered hover className="student-table">
         <thead>
@@ -165,8 +182,12 @@ const StudentPage = () => {
               <td>{student.class}</td>
               <td>{student.departmentId}</td>
               <td>
-                <Button variant="warning" onClick={() => handleEdit(student)}>Edit</Button>
-                <Button variant="danger" onClick={() => handleDelete(student.studentId)}>Delete</Button>
+                <Button variant=" " onClick={()=> handleEdit(student)} className="action-button">
+                  <FontAwesomeIcon icon={faEdit} />
+                </Button>
+                <Button variant=" " onClick={() => handleDelete(student.studentId)} className="action-button">
+                  <FontAwesomeIcon icon={faTrash} />
+                </Button>
               </td>
             </tr>
           ))}
@@ -190,11 +211,6 @@ const StudentPage = () => {
         onHide={() => setShowConfirmation(false)}
         onConfirm={handleConfirmDelete}
       />
-      <div style={{ position: 'fixed', bottom: '20px', right: '20px' }}>
-        <Button variant="danger" onClick={handleLogout}>
-          Log Out
-        </Button>
-      </div>
     </Container>
   );
 };
